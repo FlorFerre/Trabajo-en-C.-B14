@@ -1,0 +1,66 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+
+#define MAX_ETAPAS 3
+
+typedef struct {
+    double velocidadInicial;
+    double alturaInicial;
+    double aceleracion1;
+    double tiempo1;
+    double aceleracion2;
+    double alturaApagado;
+    double gravedad;
+} Parametros;
+
+typedef struct {
+    double v1;
+    double y1;
+    double v2;
+    double hmax;
+    double aceleracionG;
+} Resultados;
+
+typedef struct {
+    char nombre[40];
+    double velocidad;
+    double altura;
+} Etapa;
+
+typedef struct {
+    Parametros datos;
+    Resultados resultados;
+    Etapa historial[MAX_ETAPAS];
+    int completada;
+} Mision;
+
+// Prototipos
+void mostrarPresentacion(void);
+void mostrarBriefing(void);
+void ingresarParametros(Mision *m);
+int validarParametros(Parametros p);
+void calcularMision(Mision *m);
+void mostrarReporte(Mision m);
+int leerOpcion(void);
+
+// Lectura de opciones
+int leerOpcion(void) {
+    char linea[100];
+    char *fin;
+    long valor;
+
+    if (fgets(linea, sizeof(linea), stdin) == NULL)
+        return -1;
+
+    valor = strtol(linea, &fin, 10);
+
+    while (*fin == ' ' || *fin == '\t')
+        fin++;
+
+    if (fin == linea || (*fin != '\n' && *fin != '\0'))
+        return -1;
+
+    return (int)valor;
+}
